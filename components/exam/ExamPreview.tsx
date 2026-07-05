@@ -150,9 +150,19 @@ const ExamPreview = forwardRef<HTMLDivElement, ExamPreviewProps>(
                     marginBottom: isLast ? 0 : 24,
                   }}
                 >
-                  {/* Header repeats on every page */}
-                  <PaperHeader exam={exam} />
-                  <MetaRow exam={exam} pageIdx={pageIdx} totalPages={pages.length} />
+                  {/* Header on first page only */}
+                  {pageIdx === 0 ? (
+                    <>
+                      <PaperHeader exam={exam} />
+                      <MetaRow exam={exam} pageIdx={pageIdx} totalPages={pages.length} />
+                    </>
+                  ) : (
+                    /* Continuation line on subsequent pages */
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #d1d5db", paddingBottom: 6, marginBottom: 12, fontSize: 10, color: "#9ca3af" }}>
+                      <span style={{ fontStyle: "italic" }}>{exam.header.title || "Examination Paper"} — continued</span>
+                      <span>Page {pageIdx + 1}/{pages.length}</span>
+                    </div>
+                  )}
 
                   {/* Questions */}
                   <div style={{ marginTop: 12 }}>

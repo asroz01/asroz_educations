@@ -165,13 +165,14 @@ export default function QuestionBuilder({ questions, onChange }: QuestionBuilder
           New Question {questions.length + 1}
         </p>
 
-        <div className={inp}>
-          <input
+        <div className={`${inp} items-start`}>
+          <textarea
             value={draft.text}
             onChange={e => setDraft(d => ({ ...d, text: e.target.value }))}
             placeholder="Type the question here…"
-            className={tinp}
-            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addQuestion(); } }}
+            rows={2}
+            className={`${tinp} resize-none w-full`}
+            onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); addQuestion(); } }}
           />
         </div>
 
