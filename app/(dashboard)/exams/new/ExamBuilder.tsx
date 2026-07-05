@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useReactToPrint } from "react-to-print";
 import {
-  Save, Printer, Crown, Upload, Eye, EyeOff,
+  Save, Crown, Upload, Eye, EyeOff,
   Loader2, CheckCircle2, FileText, Type, RefreshCcw,
 } from "lucide-react";
+import PrintButton from "@/components/exam/PrintButton";
 import ExamPreview from "@/components/exam/ExamPreview";
 import QuestionBuilder from "@/components/exam/QuestionBuilder";
 import PremiumModal from "@/components/exam/PremiumModal";
@@ -33,19 +33,8 @@ export default function ExamBuilder({ isPremium: initialPremium, initialDraft, e
   const [saveError,    setSaveError]   = useState<string | null>(null);
   const [showTypo,     setShowTypo]    = useState(false);
 
-  const logoInputRef = useRef<HTMLInputElement>(null);
-  const printRef     = useRef<HTMLDivElement>(null);
+  const logoInputRef  = useRef<HTMLInputElement>(null);
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // ── react-to-print ──────────────────────────────────────────
-  const handlePrint = useReactToPrint({
-    contentRef: printRef,
-    documentTitle: exam.header.title || "Exam Paper",
-    pageStyle: `
-      @page { size: A4 portrait; margin: 0; }
-      body { margin: 0; }
-    `,
-  });
 
   // ── Debounced auto-save ──────────────────────────────────────
   const triggerAutoSave = useCallback((data: ExamData) => {
@@ -128,10 +117,7 @@ export default function ExamBuilder({ isPremium: initialPremium, initialDraft, e
               <Type size={13} /> Typography
             </button>
 
-            <button onClick={() => handlePrint()}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#1D1D1D]/60 dark:text-white/40 bg-[#ECECEC] dark:bg-[#1a1a1a] shadow-[2px_2px_5px_rgba(0,0,0,0.08),-1px_-1px_3px_rgba(255,255,255,0.85)] hover:text-[#CF291D] transition-all">
-              <Printer size={13} /> Print / PDF
-            </button>
+            <PrintButton exam={exam} />
 
             <button onClick={handleSave} disabled={saving}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#B50717] shadow-[2px_2px_6px_rgba(181,7,23,0.35)] hover:bg-[#CF291D] disabled:opacity-60 transition-all">
@@ -274,7 +260,7 @@ export default function ExamBuilder({ isPremium: initialPremium, initialDraft, e
               </p>
               {/* Horizontal scroll so A4 paper never squishes on mobile */}
               <div className="overflow-x-auto pb-2 -mx-3 px-3">
-                <ExamPreview ref={printRef} exam={exam} />
+                <ExamPreview exam={exam} />
               </div>
             </div>
           </div>
